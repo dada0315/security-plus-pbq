@@ -119,4 +119,3 @@ function resetData(){const ok=confirm("成績・間違い問題・成績履歴�
 if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
 </script>
 </body>
-</html>
