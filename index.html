@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#10243a"><title>Security+ SY0-701 実技トレーニング</title>
+<style>
+:root{--navy:#10243a;--blue:#1769aa;--bg:#f3f6fa;--line:#d8e0e8;--green:#16794b;--red:#b42318}
+*{box-sizing:border-box}body{margin:0;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",sans-serif;background:var(--bg);color:#172536;line-height:1.5}
+header{background:var(--navy);color:white;padding:18px 16px}header h1{font-size:20px;margin:0 0 4px}header p{font-size:13px;margin:0;color:#d8e5f1}
+main{max-width:900px;margin:auto;padding:16px}.card{background:white;border:1px solid var(--line);border-radius:14px;padding:16px;margin-bottom:14px;box-shadow:0 2px 8px #10243a0a}
+h2{font-size:18px;margin:0 0 10px}h3{font-size:16px;margin:0 0 8px}.muted{color:#607184;font-size:13px}.btn{border:0;border-radius:10px;padding:11px 14px;font-weight:700;cursor:pointer;background:var(--blue);color:white;font-size:15px}.btn.secondary{background:#e8eef5;color:#1b344d}.btn.dark{background:var(--navy)}.btn:disabled{opacity:.45}
+.row{display:flex;gap:8px;flex-wrap:wrap}.hostgrid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}.host{border:1px solid var(--line);background:#f9fbfd;color:#20354a;border-radius:10px;padding:12px;text-align:left;cursor:pointer}.host.active{border:2px solid var(--blue);background:#edf6ff}.host small{display:block;color:#66788b;margin-top:3px}
+.log{background:#111c28;color:#d9e6ef;border-radius:10px;padding:12px;font:12px/1.65 ui-monospace,monospace;white-space:pre-wrap;min-height:115px;overflow-wrap:anywhere}
+label.choice{display:flex;gap:9px;align-items:flex-start;padding:10px;border:1px solid var(--line);border-radius:9px;margin:8px 0;cursor:pointer}input{margin-top:5px;accent-color:var(--blue)}.result{padding:12px;border-radius:10px;margin-top:12px}.good{background:#e8f7ee;color:#155c38}.bad{background:#fff0ee;color:#922018}.hide{display:none}.pill{display:inline-block;border-radius:99px;padding:3px 8px;background:#e9eff5;font-size:12px;margin-right:4px}
+@media(max-width:560px){.hostgrid{grid-template-columns:1fr}main{padding:10px}.card{padding:13px}}
+</style></head><body>
+<header><h1>CompTIA Security+ SY0-701</h1><p>パフォーマンスベース試験（PBQ）練習アプリ・資料準拠</p></header>
+<main>
+<section class="card" id="home"><h2>実技トレーニング</h2><p>アップロードされた資料をもとに、マルウェア検知ログの読み取り・感染判定を練習します。</p>
+<p class="muted">※非公式の学習用模擬問題です。実際の試験画面・出題内容を再現または保証するものではありません。資料に記載がない部分は、練習用に構成しています。</p>
+<div class="row"><button class="btn" onclick="startPBQ1()">PBQ 1：マルウェア調査を開始</button><button class="btn secondary" onclick="showGuide()">操作方法</button></div></section>
+<section class="card hide" id="guide"><h2>操作方法</h2><ol><li>ホストを選ぶと、そのホストのスキャンログが表示されます。</li><li>ログの <b>Found</b>（検知）、<b>Quarantined</b>（隔離成功）、<b>Unable</b>（隔離失敗）、スキャン停止後にログがないことに注目します。</li><li>各ホストの感染判定と、感染源を選択します。</li><li>「採点」で正誤と解説を確認できます。</li></ol><button class="btn secondary" onclick="hideGuide()">戻る</button></section>
+<section class="hide" id="pbq1">
+<div class="card"><span class="pill">PBQ 1</span><span class="pill">ログ解析</span><h2>アンチマルウェア調査</h2><p>各ホストのログを確認し、最終的な状態を判定してください。ホスト名をタップしてログを切り替えます。</p>
+<div class="hostgrid" id="hostgrid"></div><h3 style="margin-top:14px">選択中のホストのログ</h3><div class="log" id="log"></div><p class="muted">注目語：Found＝検知 / Quarantined＝隔離 / Unable＝実行できなかった・隔離できなかった</p></div>
+<div class="card"><h2>回答</h2><p>1. 感染源として最も適切な送信元を選んでください。</p>
+<label class="choice"><input type="radio" name="origin" value="external">外部ネットワーク（57.x系の送信元アドレス）</label>
+<label class="choice"><input type="radio" name="origin" value="internal">内部ネットワーク（社内端末）</label>
+<label class="choice"><input type="radio" name="origin" value="unknown">ログから感染源は判断できない</label>
+<p>2. 各ホストの感染状態を選んでください。</p><div id="answers"></div>
+<div class="row"><button class="btn" onclick="grade()">採点する</button><button class="btn secondary" onclick="resetPBQ()">回答をリセット</button></div><div id="gradeResult"></div></div>
+</section>
+<section class="card hide" id="pbq2"><h2>PBQ 2：セキュリティ設定の強化</h2><p>資料では、不要なリモートアクセスを全面停止するより、必要なアクセスを残しながら適切に制限する考え方が示されています。また「デフォルトのシステムパスワードを変更する」という似た選択肢に注意するよう記載されています。</p><p class="muted">この資料の抜粋だけでは、PBQ 2の具体的な設問・全選択肢・正解の詳細は確認できないため、ここでは問題を創作せず、学習ポイントのみ表示しています。</p><button class="btn secondary" onclick="startPBQ1()">PBQ 1に戻る</button></section>
+</main>
+<script>
+const hosts=[
+{id:1,name:"ホスト1（左上）",desc:"スキャン停止",log:"17日：スキャン正常終了\\n隔離：なし\\n次回スキャン予定：18日 14:30\\n\\n以降、スキャンログなし。アンチマルウェア機能が動作しなくなった。",infected:true,why:"17日のスキャンは異常なく終了していますが、その後スキャン機能が停止しログもありません。資料では感染していると判断しています。"},
+{id:2,name:"ホスト2（中央上）",desc:"隔離成功",log:"Threat pattern matched\\nFile: svch0st.exe\\nStatus: Found\\nStatus: Quarantined\\n\\nSubsequent scans: no further issue",infected:false,why:"svch0st.exeを検知し、Quarantined（隔離）に成功。その後も問題がないため、資料では感染を回避できたと判断しています。"},
+{id:3,name:"ホスト3（右上）",desc:"隔離失敗・更新不可",log:"Suspicious pattern detected\\nStatus: Found\\nQuarantine: Unable\\n\\nUpdate server: connection failed",infected:true,why:"怪しいファイルを検知しましたが隔離できておらず、アップデートサーバーにも接続できていません。資料では感染ありの扱いです。"},
+{id:4,name:"ホスト4（左下）",desc:"隔離成功",log:"Threat pattern matched\\nStatus: Found\\nStatus: Quarantined\\n\\nSubsequent scan: no further issue",infected:false,why:"資料ではホスト3と同様の検知後、隔離に成功していると説明されています。隔離成功として感染なしに分類します。"},
+{id:5,name:"ホスト5（右下）",desc:"隔離失敗",log:"Suspicious pattern detected\\nStatus: Found\\nQuarantine: Unable\\n\\nFile remains on host",infected:true,why:"資料ではホスト2と同様に検知していますが、隔離できていないと説明されています。感染ありに分類します。"}
+];
+let selected=1;
+function startPBQ1(){document.getElementById('home').classList.add('hide');document.getElementById('guide').classList.add('hide');document.getElementById('pbq2').classList.add('hide');document.getElementById('pbq1').classList.remove('hide');renderHosts();renderAnswers();selectHost(1);window.scrollTo(0,0)}
+function showGuide(){document.getElementById('home').classList.add('hide');document.getElementById('guide').classList.remove('hide')}
+function hideGuide(){document.getElementById('guide').classList.add('hide');document.getElementById('home').classList.remove('hide')}
+function renderHosts(){document.getElementById('hostgrid').innerHTML=hosts.map(h=>`<button class="host ${h.id===selected?'active':''}" onclick="selectHost(${h.id})"><b>${h.name}</b><small>${h.desc}</small></button>`).join('')}
+function selectHost(id){selected=id;document.getElementById('log').textContent=hosts.find(h=>h.id===id).log;renderHosts()}
+function renderAnswers(){document.getElementById('answers').innerHTML=hosts.map(h=>`<div class="card" style="padding:10px;margin:8px 0"><b>${h.name}</b><label class="choice"><input type="radio" name="host${h.id}" value="infected">感染あり</label><label class="choice"><input type="radio" name="host${h.id}" value="clean">感染なし</label></div>`).join('')}
+function grade(){let score=0,total=6,details=[];let origin=document.querySelector('input[name="origin"]:checked');if(origin&&origin.value==='external')score++;details.push(`<p><b>感染源：</b>${origin&&origin.value==='external'?'正解':'不正解'} — 資料ではSource（送信元）とDestinationPort（宛先）を確認し、外部の57系アドレスからのダウンロードと推測しています。</p>`);
+hosts.forEach(h=>{let a=document.querySelector(`input[name="host${h.id}"]:checked`);let ok=a&&a.value===(h.infected?'infected':'clean');if(ok)score++;details.push(`<p><b>${h.name}：</b>${ok?'正解':'不正解'}。${h.why}</p>`)});
+let unanswered=(!origin?1:0)+hosts.filter(h=>!document.querySelector(`input[name="host${h.id}"]:checked`)).length;
+document.getElementById('gradeResult').innerHTML=`<div class="result ${score===total?'good':'bad'}"><h3>結果：${score} / ${total} 点</h3>${unanswered?`未回答：${unanswered}項目`:"全項目に回答しました。"}</div><div class="card"><h3>解説</h3>${details.join('')}</div>`;document.getElementById('gradeResult').scrollIntoView({behavior:'smooth',block:'start'})}
+function resetPBQ(){document.querySelectorAll('input[type=radio]').forEach(x=>x.checked=false);document.getElementById('gradeResult').innerHTML=''}
+</script></body></html>
