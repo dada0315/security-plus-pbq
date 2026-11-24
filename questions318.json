@@ -1,122 +1,17 @@
-<!doctype html>
-<html lang="ja">
-<head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
-<meta name="theme-color" content="#111827">
-<link rel="manifest" href="manifest.json">
-<title>Security+ 500問トレーニング</title>
-<style>
-:root{--bg:#f3f4f6;--card:#fff;--text:#111827;--muted:#6b7280;--accent:#2563eb;--line:#e5e7eb}
-*{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,"Noto Sans JP",sans-serif}
-header{background:#111827;color:#fff;padding:18px 16px 14px;position:sticky;top:0;z-index:5;box-shadow:0 2px 10px #00000022}
-header h1{font-size:19px;line-height:1.35;margin:0 0 4px}
-header p{margin:0;font-size:12px;color:#cbd5e1}
-main{max-width:720px;margin:auto;padding:16px 14px 100px}
-.card{background:var(--card);border:1px solid var(--line);border-radius:20px;padding:18px;margin-bottom:14px;box-shadow:0 3px 14px #00000012}
-h2{font-size:20px;margin:0 0 14px}
-.grid{display:grid;grid-template-columns:repeat(2,1fr);gap:10px}
-button,select{font:inherit;border-radius:12px;border:1px solid #cbd5e1;background:#fff;padding:12px 14px;cursor:pointer}
-button{min-height:52px;font-weight:600;-webkit-appearance:none;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-button:active{transform:scale(.98)}
-button.primary{background:var(--accent);color:#fff;border-color:var(--accent)}
-button.pbq{background:#0f766e;color:#fff;border-color:#0f766e}
-button:disabled{opacity:.55}
-.small{font-size:12px;color:var(--muted)}
-.stat{display:flex;justify-content:space-between;padding:10px 0;border-bottom:1px solid var(--line)}
-select{width:100%;margin:6px 0 12px}
-.progress{height:8px;background:#e5e7eb;border-radius:999px;overflow:hidden;margin:10px 0}
-.bar{height:100%;background:var(--accent);width:0}
-.question{font-size:20px;font-weight:700;line-height:1.65;margin:14px 0}
-.option{width:100%;text-align:left;margin:8px 0;white-space:normal;min-height:64px;padding:14px 15px;font-size:17px;line-height:1.45;border:2px solid #cbd5e1;border-radius:16px}
-.option.correct{border-color:#16a34a;background:#f0fdf4}
-.option.wrong{border-color:#dc2626;background:#fef2f2}
-.explain{border-left:4px solid var(--accent);background:#eff6ff;padding:14px;border-radius:12px;line-height:1.7;margin-top:12px;font-size:16px}
-.badge{display:inline-block;padding:4px 8px;border-radius:999px;background:#eef2ff;color:#3730a3;font-size:11px;margin-right:5px}
-.row{display:flex;gap:8px;align-items:center;flex-wrap:wrap}
-.hide{display:none}
-.timer{font-weight:800;font-size:18px;color:#b91c1c}
-.timer.ok{color:#111827}
-.review-item{border:1px solid var(--line);border-radius:14px;padding:12px;margin:10px 0}
-.review-q{font-weight:700;line-height:1.5}
-.review-ok{color:#15803d;font-weight:700}
-.review-ng{color:#b91c1c;font-weight:700}
-.history{margin-top:12px}
-.history-row{display:flex;justify-content:space-between;gap:10px;padding:10px 0;border-bottom:1px solid var(--line)}
-footer{position:fixed;bottom:0;left:0;right:0;background:#ffffffee;backdrop-filter:blur(12px);border-top:1px solid var(--line);padding:7px 8px calc(7px + env(safe-area-inset-bottom));z-index:6;box-shadow:0 -2px 12px #00000012}
-footer .inner{width:min(720px,100%);margin:auto;display:flex;gap:8px}
-footer button{flex:1;padding:10px;min-height:48px;font-size:14px}
-html,body{width:100%;max-width:100%;overflow-x:hidden;-webkit-text-size-adjust:100%;-webkit-tap-highlight-color:transparent;touch-action:manipulation}
-body{padding-bottom:env(safe-area-inset-bottom)}
-@media(max-width:480px){.grid{grid-template-columns:1fr}.question{font-size:18px}}
-@media(max-width:380px){main{padding-left:10px;padding-right:10px}.card{padding:14px}.question{font-size:18px}.option{min-height:60px;font-size:16px}}
-@media(min-width:600px){.option{min-height:58px}}
-</style>
-</head>
-<body>
-<header><h1>🔐 Security+ 500問トレーニング</h1><p>オリジナル練習問題／非公式・学習用</p></header>
-<main>
-<section id="home" class="card">
-<h2>学習メニュー</h2>
-<div class="stat"><span>総問題数</span><b>500問</b></div>
-<div class="stat"><span>最高正解率</span><b id="best">0%</b></div>
-<div class="stat"><span>間違い保存</span><b id="wrongCount">0問</b></div>
-<label class="small" for="domain">分野</label>
-<select id="domain"><option value="all">全分野（500問）</option><option>一般セキュリティ概念</option><option>脅威・脆弱性・緩和策</option><option>セキュリティアーキテクチャ</option><option>セキュリティ運用</option><option>セキュリティプログラム管理</option></select>
-<label class="small" for="count">出題数</label>
-<select id="count"><option>10</option><option>25</option><option>50</option><option>100</option><option>500</option></select>
-<div class="grid">
-<button class="primary" onclick="startQuiz(false)">🚀 スタート</button>
-<button onclick="startQuiz(true)">🔀 ランダム</button>
-<button onclick="startWrong()">❌ 間違い復習</button>
-<button class="primary" onclick="startMock()">📝 模擬試験</button>
-<button onclick="showStats()">📊 成績</button>
-<!-- 追加：PBQ実技問題へのリンク -->
-<button class="pbq" onclick="location.href='pbq.html'">🖥️ 実技問題（PBQ）</button>
-</div>
-<p class="small">実技問題ボタンから、別ページのPBQ練習を開けます。</p>
-</section>
-<section id="quiz" class="card hide">
-<div class="row"><span id="qno"></span><span id="qdomain" class="badge"></span><span id="qdifficulty" class="badge"></span><span id="modeBadge" class="badge hide">模擬試験</span><span id="timer" class="timer hide">残り 90:00</span></div>
-<div class="progress"><div id="bar" class="bar"></div></div><div id="qtext" class="question"></div><div id="options"></div>
-<div id="explain" class="explain hide"></div><div class="row" style="margin-top:12px">
-<button id="next" class="primary" onclick="nextQuestion()" disabled>次の問題 ▶</button><button onclick="goHome()">メニュー</button></div>
-</section>
-<section id="result" class="card hide"><h2>🎉 結果</h2><div id="resultText"></div><div class="grid"><button class="primary" onclick="restart()">もう一度</button><button onclick="goHome()">メニューへ</button></div></section>
-<section id="stats" class="card hide"><h2>📊 成績</h2><div id="statsBody"></div><div id="history" class="history"></div><button onclick="goHome()">戻る</button><button onclick="resetData()" style="margin-top:10px;color:#b91c1c;border-color:#fca5a5">🗑️ 成績・間違い問題をリセット</button></section>
-<section id="review" class="card hide"><h2>📖 模擬試験の解説</h2><div id="reviewBody"></div><button onclick="goHome()">メニューへ</button></section>
-</main>
-<footer><div class="inner"><button onclick="goHome()">🏠 メニュー</button><button onclick="startWrong()">❌ 間違い復習</button></div></footer>
-<script>
-let bank=[],session=[],idx=0,score=0,answered=false,lastSession=[],mode="training",answers=[],timerId=null,timeLeft=0;
-const $=id=>document.getElementById(id);
-const getWrong=()=>JSON.parse(localStorage.getItem("secplus_wrong")||"[]");
-const saveWrong=a=>localStorage.setItem("secplus_wrong",JSON.stringify([...new Set(a)]));
-const getStats=()=>JSON.parse(localStorage.getItem("secplus_stats")||'{"attempts":0,"correct":0,"total":0,"best":0,"mockAttempts":0,"mockBest":0}');
-const getHistory=()=>JSON.parse(localStorage.getItem("secplus_history")||"[]");
-const saveHistory=h=>localStorage.setItem("secplus_history",JSON.stringify(h.slice(-20)));
-fetch("questions.json").then(r=>{if(!r.ok)throw Error("questions.json");return r.json()}).then(d=>{bank=d;refreshHome()}).catch(()=>alert("問題データを読み込めません。GitHub Pages公開直後なら再読み込みしてください。"));
-function refreshHome(){const s=getStats();$("best").textContent=(s.best||0)+"%";$("wrongCount").textContent=getWrong().length+"問"}
-function hideAll(){["home","quiz","result","stats","review"].forEach(x=>$(x).classList.add("hide"))}
-function goHome(){stopTimer();hideAll();$("home").classList.remove("hide");refreshHome()}
-function pick(n,d){let a=bank.filter(q=>d==="all"||q.domain===d);a.sort(()=>Math.random()-.5);return a.slice(0,Math.min(n,a.length))}
-function startQuiz(random=false){stopTimer();mode="training";const n=+$("count").value,d=$("domain").value;session=pick(n,d);idx=0;score=0;answers=[];lastSession=session;if(!session.length){alert("問題データがまだ読み込まれていません。");return}hideAll();$("quiz").classList.remove("hide");$("modeBadge").classList.add("hide");$("timer").classList.add("hide");render()}
-function startWrong(){stopTimer();mode="wrong";const ids=getWrong(),n=+$("count").value;session=bank.filter(q=>ids.includes(q.id)).sort(()=>Math.random()-.5).slice(0,n);if(!session.length){alert("間違い問題はまだありません。まず問題を解いてみよう！");return}idx=0;score=0;answers=[];lastSession=session;hideAll();$("quiz").classList.remove("hide");$("modeBadge").classList.add("hide");$("timer").classList.add("hide");render()}
-function startMock(){if(bank.length<90){alert("問題データを読み込んでから模擬試験を開始してください。");return}stopTimer();mode="mock";session=pick(90,"all");idx=0;score=0;answers=new Array(session.length).fill(null);lastSession=session;hideAll();$("quiz").classList.remove("hide");$("modeBadge").classList.remove("hide");$("timer").classList.remove("hide");startTimer(90*60);render()}
-function startTimer(seconds){timeLeft=seconds;updateTimer();timerId=setInterval(()=>{timeLeft--;updateTimer();if(timeLeft<=0){stopTimer();finishMock(true)}},1000)}
-function stopTimer(){if(timerId){clearInterval(timerId);timerId=null}}
-function updateTimer(){const m=Math.floor(Math.max(0,timeLeft)/60),s=Math.max(0,timeLeft)%60;$("timer").textContent=`残り ${String(m).padStart(2,"0")}:${String(s).padStart(2,"0")}`;$("timer").classList.toggle("ok",timeLeft>600)}
-function render(){answered=false;$("next").disabled=(mode==="training");$("explain").classList.add("hide");const q=session[idx];$("qno").textContent=`${idx+1} / ${session.length}`;$("qdomain").textContent=q.domain;$("qdifficulty").textContent=q.difficulty;$("bar").style.width=((idx+1)/session.length*100)+"%";$("qtext").textContent=q.question;const w=$("options");w.innerHTML="";q.options.forEach((o,i)=>{const b=document.createElement("button");b.className="option";b.textContent=`${String.fromCharCode(65+i)}. ${o}`;if(mode==="mock"&&answers[idx]===i){b.classList.add("selected");b.style.borderColor="var(--accent)";b.style.background="#eff6ff"}b.onclick=()=>answer(i);w.appendChild(b)});if(mode==="mock"){$("next").disabled=false;$("next").textContent=idx===session.length-1?"模擬試験を終了 ▶":"次の問題 ▶"}else{$("next").textContent=idx===session.length-1?"結果を見る ▶":"次の問題 ▶"}}
-function answer(choice){const q=session[idx];if(mode==="mock"){answers[idx]=choice;answered=true;[...$("options").children].forEach(b=>{b.classList.remove("selected");b.style.borderColor="";b.style.background=""});const b=$("options").children[choice];b.classList.add("selected");b.style.borderColor="var(--accent)";b.style.background="#eff6ff";return}if(answered)return;answered=true;const bs=[...$("options").children];bs.forEach((b,i)=>{b.disabled=true;if(i===q.answer)b.classList.add("correct");if(i===choice&&choice!==q.answer)b.classList.add("wrong")});if(choice===q.answer){score++;saveWrong(getWrong().filter(id=>id!==q.id))}else{saveWrong([...new Set([...getWrong(),q.id])])}$("explain").textContent=(choice===q.answer?"⭕ 正解！ ":"❌ 不正解。 ")+q.explanation;$("explain").classList.remove("hide");$("next").disabled=false;$("next").textContent=idx===session.length-1?"結果を見る ▶":"次の問題 ▶"}
-function nextQuestion(){if(mode==="mock"){if(idx<session.length-1){idx++;render()}else finishMock(false);return}if(!answered)return;if(idx<session.length-1){idx++;render()}else finishTraining()}
-function finishTraining(){const pct=Math.round(score/session.length*100),s=getStats();s.attempts++;s.correct+=score;s.total+=session.length;s.best=Math.max(s.best||0,pct);localStorage.setItem("secplus_stats",JSON.stringify(s));saveHistory([...getHistory(),{type:mode==="wrong"?"間違い復習":"練習",date:new Date().toLocaleString("ja-JP"),score,total:session.length,pct}]);hideAll();$("result").classList.remove("hide");if(mode==="wrong"){const remaining=getWrong().length;$("resultText").innerHTML=`<div class="stat"><span>間違い復習</span><b>${score} / ${session.length}</b></div><div class="stat"><span>正解率</span><b>${pct}%</b></div><div class="stat"><span>残りの間違い問題</span><b>${remaining}問</b></div><p>${remaining===0?"🎉 間違い問題をすべてクリアしました！":"💪 残っている間違い問題をもう一度復習しよう！"}</p>`}else{$("resultText").innerHTML=`<div class="stat"><span>正解</span><b>${score} / ${session.length}</b></div><div class="stat"><span>正解率</span><b>${pct}%</b></div><p>${pct>=80?"🔥 かなり良い！":"💪 間違い復習でもう一周しよう！"}</p>`}refreshHome()}
-function finishMock(timeout){stopTimer();score=answers.reduce((n,a,i)=>n+(a===session[i].answer?1:0),0);const pct=Math.round(score/session.length*100),s=getStats();s.mockAttempts=(s.mockAttempts||0)+1;s.mockBest=Math.max(s.mockBest||0,pct);s.attempts++;s.correct+=score;s.total+=session.length;s.best=Math.max(s.best||0,pct);localStorage.setItem("secplus_stats",JSON.stringify(s));saveHistory([...getHistory(),{type:"模擬試験",date:new Date().toLocaleString("ja-JP"),score,total:session.length,pct,timeout:!!timeout}]);hideAll();$("result").classList.remove("hide");$("resultText").innerHTML=`<div class="stat"><span>模擬試験</span><b>${timeout?"⏰ 時間切れ":"完了"}</b></div><div class="stat"><span>正解</span><b>${score} / ${session.length}</b></div><div class="stat"><span>正解率</span><b>${pct}%</b></div><p>${pct>=80?"🔥 合格圏を狙える出来！":"💪 解説を確認して、もう一度挑戦しよう！"}</p><button class="primary" onclick="showReview()">📖 全問題の解説を見る</button>`;refreshHome()}
-function restart(){if(mode==="mock")startMock();else if(mode==="wrong")startWrong();else startQuiz(false)}
-function showReview(){hideAll();$("review").classList.remove("hide");let html="";session.forEach((q,i)=>{const a=answers[i],ok=a===q.answer;html+=`<div class="review-item"><div class="review-q">${i+1}. ${q.question}</div><div class="${ok?"review-ok":"review-ng"}">${a===null?"未回答":(ok?"⭕ 正解":"❌ 不正解")}</div><div class="small">正解：${String.fromCharCode(65+q.answer)}. ${q.options[q.answer]}</div><div class="explain">${q.explanation}</div></div>`});$("reviewBody").innerHTML=html}
-function showStats(){const s=getStats(),h=getHistory().slice().reverse(),rate=s.total?Math.round(s.correct/s.total*100):0;hideAll();$("stats").classList.remove("hide");$("statsBody").innerHTML=`<div class="stat"><span>受験回数</span><b>${s.attempts}</b></div><div class="stat"><span>累計正解率</span><b>${rate}%</b></div><div class="stat"><span>最高正解率</span><b>${s.best||0}%</b></div><div class="stat"><span>模擬試験回数</span><b>${s.mockAttempts||0}</b></div><div class="stat"><span>模擬試験最高</span><b>${s.mockBest||0}%</b></div><div class="stat"><span>間違い保存</span><b>${getWrong().length}問</b></div>`;$("history").innerHTML="<h3>📚 最近の成績（最大20件）</h3>"+(h.length?h.map(x=>`<div class="history-row"><span>${x.type}<br><span class="small">${x.date}${x.timeout?"・時間切れ":""}</span></span><b>${x.score}/${x.total}<br>${x.pct}%</b></div>`).join(""):"<p class='small'>まだ成績がありません。</p>")}
-function resetData(){const ok=confirm("成績・間違い問題・成績履歴をすべてリセットします。\n\n本当にリセットしますか？");if(!ok)return;localStorage.removeItem("secplus_stats");localStorage.removeItem("secplus_wrong");localStorage.removeItem("secplus_history");alert("✅ 成績と間違い問題をリセットしました。");refreshHome();showStats()}
-if("serviceWorker"in navigator)navigator.serviceWorker.register("sw.js").catch(()=>{});
-</script>
-</body>
-</html>
+
+[
+  {
+    "id": 1,
+    "domain": "セキュリティの基礎",
+    "difficulty": "標準",
+    "question": "テスト問題：最小権限の原則を最もよく説明しているものはどれですか？",
+    "options": [
+      "すべての利用者に管理者権限を与える",
+      "必要な業務に必要な権限だけを与える",
+      "すべての通信を許可する",
+      "パスワードを共有する"
+    ],
+    "answer": 1,
+    "explanation": "最小権限の原則では、利用者やシステムに必要最小限の権限だけを付与します。"
+  }
+]
